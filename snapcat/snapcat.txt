@@ -1,0 +1,1 @@
+Used PhotoRec on disk.img to recover files
