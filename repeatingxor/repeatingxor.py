@@ -19,10 +19,11 @@ while (offset < 13):
     while (i < 30):
         text=text+stuff[i]
         passw=passw+shift[i]
-        if (int(stuff[i],16) ^ int(shift[i],16) == 0):
-            decrypt=decrypt+"00"
-        else:
-            decrypt=decrypt+(hex(int(stuff[i],16) ^ int(shift[i],16)))[2:]
+        if len((hex(int(stuff[i],16) ^ int(shift[i],16)))[2:]) == 1:
+            decrypt+="0"
+        elif len((hex(int(stuff[i],16) ^ int(shift[i],16)))[2:]) == 0:
+            decrypt+="00"
+        decrypt=decrypt+(hex(int(stuff[i],16) ^ int(shift[i],16)))[2:]
         i+=1
     offset+=12
     prekappa=0
