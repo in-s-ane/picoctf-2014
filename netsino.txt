@@ -1,0 +1,21 @@
+Basically, you want to bet a negative amount so that if you lose, you gave money. Normally, the getnum() function will not let you input negative numbers, but remember that data types "loop around". Therefore, after it reaches its maximum capacity, it becomes negative.
+
+The return of getnum() is based on the primitive uint64_t
+This is just a regular int of 4 bytes. To overflow it and cause it to loop around, simply input a number a bit more than 2^31, I used 2147483649 (1 more than 2^31)
+
+Yerr can't bet more than ya got!
+You've got $50. How much you wanna bet on this next toss?
+> 2147483649
+1: EVEN. Win your bet back plus an additional $2147483649 if the dice sum even.
+2: ODDS. Win your bet back plus an additional $2147483651 if both dice roll odd.
+3: HIGH. Win your bet back plus an additional $2147483653 if the dice sum to 10 or more.
+4: FOUR. Win your bet back plus an additional $8 if the dice sum to four.
+5: EYES. Win your bet back plus an additional $2147483683 on snake eyes.
+What'll it be?
+> 5
+Lets rock 'n' roll!
+5 2
+Like that was ever gonna happen.
+Great, I'm fresh outta cash. Take this flag instead.
+i_wish_real_casinos_had_this_bug
+Git outta here.
