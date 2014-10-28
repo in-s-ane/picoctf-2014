@@ -1,0 +1,9 @@
+080484ad <give_shell>:
+
+Overflow the buffer so that you modify the return value of the %eip which is the return call for the main function when you do a objdump -d overflow2 | grep "804851b"
+Replace the original return memory address with the value of the shell memory address above and leave %ebp untouched (this requires you to manually type in "\x98\xd6\xff\xff"
+
+$ cat flag.txt
+controlling_%eip_feels_great
+
+NOTES: EIP and EBP are stack and heap registers
