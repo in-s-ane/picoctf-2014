@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="abc_search_url_text_normal">#ff7fa87f</color>
+    <item type="color" name="abc_search_url_text_pressed">@*android:color/black</item>
+    <item type="color" name="abc_search_url_text_selected">@*android:color/black</item>
+</resources>
