@@ -1,0 +1,12 @@
+If you look at the two files (since they were pointed out in the hint), you'll see that the controllers creates a user with all the parameters given from the html form.
+
+So, you look at the schema.db for the attributes that the User has and the one that you want to change is is_admin to true
+
+In the register form, simply add an input for this attribute to be sent to the server, with the syntax following that of the other inputs
+
+<input name="user[is_admin]" type="text" value="true">
+
+After Registering:
+Registration Complete!
+Welcome danny!
+You're an admin, so you get to know the secret code: no_framework_is_without_sin
