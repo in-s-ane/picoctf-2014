@@ -1,0 +1,11 @@
+It is best to use the interactive console for this since it automatically helps you print hexadecimals.
+
+For this problem, you have to send in the correct password and modify the pointer file_name to somewhere down the line.
+What I mean is that the default file is not_the_flag.txt
+The goal is to make the file_name pointer point to 'f' instead of 'n'.
+
+This is done by shifting the first set in the hexademical down 8 digits from 77 -> 7f
+Also, note that gets() does not terminate the string, so you have to specify the terminating null after the password.
+
+$ printf "1337_P455W0RD\x00\x00\x00\x7f\x87\x04\x08" | ./what_the_flag
+Congratulations! Here is the flag: who_needs_%eip
