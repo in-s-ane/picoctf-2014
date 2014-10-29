@@ -4,10 +4,11 @@ document.cookie</script>
 
 Keep track of the post id of that post
 
-Create a new random post
-On the page on the new random post, modify the hidden field under the "report to moderator" form to be the id of the vulnerable post
+Create a new post
+On the page on the new post, modify the hidden field under the "report to moderator" form to be the id of the vulnerable post
+Report the post
 
-Check apache log for session id of moderator
+Check your server's log for a request containing the cookie data, notably the session id of moderator
 Use console to modify your own session id to that of moderator
 Load password-protected page
 Inspect source to see the flag
