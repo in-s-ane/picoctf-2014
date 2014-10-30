@@ -1,0 +1,34 @@
+THIS REQUIRES THE USE OF xortool (https://github.com/hellman/xortool)
+
+> sudo pip install xortool
+
+You are given a hex encoded string in encrypted.txt
+So, xortool will help you crack the encryption!!
+
+xortool -x encrypted.txt -b
+    The -x specifies that you are giving it a hex-encoded file
+    The -b is telling xortool to brute force all possible characters (keys for encryption)
+
+The output of this will be in the folder xortool_out and you have to look through all 000.out - 255.out
+    This process can be simplified by using less * on the directory, and when less tells you that the file is a binary file, press enter to skip to the next file. When you get to 032.out, less will display the file automatically since the whole file is just ASCII.
+
+Hex-encoded decryption key: 2b0a2ahab1721l6970e8
+
+Contents of 032.out:
+====================
+
+your flag is: e5f326dba193724213666ed19eb7d2e6eb426806
+
+During the early history of cryptography, two parties would rely upon a key that they would exchange between themselves by means of a secure, but non-cryptographic, method. For example, a face-to-face meeting or an exchange, via a trusted courier, could be used. This key, which both parties kept absolutely secret, could then be used to exchange encrypted messages. A number of significant practical difficulties arise with this approach to distributing keys.
+
+In 1874, a book by William Stanley Jevons described the relationship of one-way functions to cryptography, and went on to discuss specifically the factorization problem used to create a trapdoor function. In July 1996, mathematician Solomon W. Golomb said: "Jevons anticipated a key feature of the RSA Algorithm for public key cryptography, although he certainly did not invent the concept of public key cryptography."
+
+In 1970 James H. Ellis a British cryptographer at the Government Communications Headquarters (GCHQ) conceived of the possibility of "non-secret encryption", (now called public-key cryptography), but could see no way to implement it. In 1973 his colleague Clifford Cocks invented what has become known as the RSA encryption algorithm, giving a practical method of implementation, and in 1974 another GCHQ mathematician and cryptographer, Malcolm J. Williamson developed what is now known as Diffie-Hellman key exchange. None of these appear to have been put to practical use, and their early invention did not become public knowledge until the research was declassified by the British government in 1997.
+
+In 1976 an asymmetric-key cryptosystem was published by Whitfield Diffie and Martin Hellman who, influenced by Ralph Merkle's work on public-key distribution, disclosed a method of public-key agreement. This method of key exchange, which uses exponentiation in a finite field, came to be known as Diffie-Hellman key exchange. This was the first published practical method for establishing a shared secret-key over an authenticated (but not private) communications channel without using a prior shared secret. Merkle's "public-key-agreement technique" became known as Merkle's Puzzles, and was invented in 1974 and published in 1978.
+
+In 1977 a generalization of Cocks's scheme was independently invented by Ron Rivest, Adi Shamir and Leonard Adleman, all then at MIT. The latter authors published their work in 1978, and the algorithm came to be known as RSA, from their initials. RSA uses exponentiation modulo a product of two very large primes, to encrypt and decrypt, performing both public key encryption and public key digital signature. Its security is connected to the extreme difficulty of factoring large integers, a problem for which there is no known efficient general technique. In 1979, Michael O. Rabin published a related cryptosystem that is probably secure as long as the factorization of the public key remains difficult - it remains an assumption that RSA also enjoys this security.
+
+Since the 1970s, a large number and variety of encryption, digital signature, key agreement, and other techniques have been developed in the field of public-key cryptography. The ElGamal cryptosystem, invented by Taher ElGamal relies on the similar and related high level of difficulty of the discrete logarithm problem, as does the closely related DSA, which was developed at the US National Security Agency (NSA) and published by NIST as a proposed standard.
+
+The introduction of elliptic curve cryptography by Neal Koblitz and Victor Miller, independently and simultaneously in the mid-1980s, has yielded new public-key algorithms based on the discrete logarithm problem. Although mathematically more complex, elliptic curves provide smaller key sizes and faster operations for approximately equivalent estimated security.
