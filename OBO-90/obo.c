@@ -37,8 +37,8 @@ int read_password(FILE *file, char *password, size_t n) {
 
 void change_password(char *password) {
   char cmd[128];
-  gid_t gid = getegid();
-  setresgid(gid, gid, gid);
+  /*gid_t gid = getegid();
+  setresgid(gid, gid, gid);*/
   // C is too hard, so I did the password changing in Python.
   snprintf(cmd, sizeof(cmd), "python set_password.py \"%s\"", password);
   system(cmd);
@@ -74,12 +74,16 @@ int main(int argc, char **argv) {
     digits[index] = 1;
   }
 
+  printf("Pointer to digits: %p\n",digits);
+  printf("Pointer to password: %p\n",password);
+  printf("Pointer to new_password: %p\n",new_password);
   for (i = 0; i <= 16; ++i) {
     if (digits[i] == 0) {
       printf("Password is not complex enough: %d\n", i);
       return 1;
     }
   }
+  printf("This should print out the flag: '%s'\n", password);
 
   printf("Confirm old password: ");
   fflush(stdout);

