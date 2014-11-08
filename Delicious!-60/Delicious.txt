@@ -1,1 +1,12 @@
+Basically, just edit the cookie for your session_id
+
 document.cookie="session_id=58"
+
+---
+
+Welcome! You've been here before.
+Your session number is 58.
+
+We'll be tracking you using this number whenever you visit this site.
+
+You're logged in as Dr. Florian Richards. Today's secret Daedalus code is: session_cookies_are_the_most_delicious

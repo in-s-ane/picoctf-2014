@@ -1,0 +1,46 @@
+   fgets(temporary.buf, NOTE_SIZE, stdin);
+
+
+NOTE_SIZE is 1024, but temporary.buf is 512 bytes long, buffer overflow.
+
+
+struct canary{
+    int canary;
+    int *verify;
+};
+
+struct safe_buffer{
+    char buf[SAFE_BUFFER_SIZE];
+    struct canary can;
+};
+
+bool get_note(char *dest){
+    struct safe_buffer temporary;
+	...
+}
+
+so our memory layout is [buffer][canary][verify][saved eip]
+
+
+But, overwriting canary/verify to get to eip is going to trip the 
+   if (c->canary != *(c->verify)){
+        printf("Canary was incorrect!\n");
+        __canary_failure(1);
+    }
+
+So we need to forge ourselves a canary.
+
+For a canary to be valid, we just need c->verify to point to the same value as c->canary has
+
+So any pointer, as long as we know what it points to, would pass this check
+
+So for example if at 0xDEADBEEF was 0x12345678 we could overflow the buffer with \x78\x56\x34\x12\xEF\xBE\xAD\xDE and pass this check successfully.
+
+However, the next line  free(c->verify); is almost guarenteed to crash if we free(0xDEADBEEF) so we need to pick a pointer that isn't going to crash when passed to free().
+
+So.. how about a value that malloc() returned previously, that won't crash. malloc()'s return values turn out to be predictable and repeatable, so a couple of minutes in gdb
+will let you know that     char *new_note = (char *)malloc(NOTE_SIZE);  gives 0x0804c050.
+
+0x0804c050 points to 0 at this point, so we overflow \x00\x00\x00\x00\x50\xc0\x04\x08 into the canary struct.
+
+Now we just overwrite eip with the address of our buffer on the stack, and put some shellcode in our buffer.

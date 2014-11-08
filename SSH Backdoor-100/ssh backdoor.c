@@ -17,4 +17,5 @@ int main() {
 }
 
 // $ ssh jon@backdoor.picoctf.com
+// Password is iminyourmachinestealingyourflags
 // $ cat flags.txt
