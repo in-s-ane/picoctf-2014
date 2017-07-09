@@ -13,7 +13,7 @@ Team Members:
 PicoCTF ran from October 27, 2014 - November 7, 2014
 
 We peaked at Rank 13 on October 29, 2014:
-![Rank 13](http://raw.github.com/dannyqiu/in-s-ane/master/_Ranking/Screen Shot 2014-10-29 at 9.46.41 AM.png)
+![Rank 13](https://github.com/in-s-ane/picoctf-2014/raw/master/_Ranking/Screen%20Shot%202014-10-29%20at%209.46.41%20AM.png)
 
 And ended at Rank 27 with 4185 points:
-![Rank 27](http://raw.github.com/dannyqiu/in-s-ane/master/_Ranking/Screen Shot 2014-11-08 at 12.49.43 AM.png)
+![Rank 27](https://github.com/in-s-ane/picoctf-2014/raw/master/_Ranking/Screen%20Shot%202014-11-08%20at%2012.49.43%20AM.png)
